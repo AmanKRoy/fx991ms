@@ -1,0 +1,205 @@
+/* fx-991MS emulator — phone-first layout. Colours after the real unit:
+   navy body, black function keys, grey number keys, red DEL/AC,
+   SHIFT legends gold, ALPHA legends red, CMPLX purple, SD/REG blue, BASE green. */
+:root {
+  --body: #262b45;
+  --body2: #1d2138;
+  --gold: #e9a531;
+  --red: #ef4350;
+  --cx: #c27be6;
+  --sd: #4da3ff;
+  --bs: #35c46a;
+  --lcd: #c3cdb4;
+  --ink: #1b221d;
+  --kdark: #17181f;
+  --knum: #c3c6cd;
+  --kred: #c9304a;
+  --lgfs: clamp(7.5px, min(1.45dvh, 2.75vw), 12.5px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #0f1120; color: #fff; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  overflow: hidden; overscroll-behavior: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+#app {
+  height: 100vh; height: 100dvh; max-width: 470px; margin: 0 auto;
+  display: flex; flex-direction: column;
+  padding: max(4px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
+  gap: 4px;
+}
+
+/* ---------- textbook strip (reading aid, outside the calculator) ---------- */
+#textbook {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
+  min-height: clamp(38px, 7.5dvh, 70px); max-height: 12dvh;
+  background: #fbfaf5; color: #111; border-radius: 10px; padding: 2px 4px 2px 10px;
+  overflow: hidden;
+}
+#textbook.off { min-height: 0; background: transparent; padding: 0; justify-content: flex-end; }
+#textbook.off .tb-body { display: none; }
+.tb-body {
+  flex: 1; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scrollbar-width: none;
+  font: 400 clamp(15px, 2.6dvh, 22px)/1.1 "Cambria Math", "STIX Two Math", "Latin Modern Math", Cambria, "Times New Roman", serif;
+  display: block; line-height: 2.6;  /* block (not flex) so vertical-align on sup/sub/frac works */
+}
+.tb-body::-webkit-scrollbar { display: none; }
+.tb-empty { color: #999; font-style: italic; font-size: .75em; }
+#tb-toggle {
+  flex: 0 0 auto; font: 700 11px system-ui, sans-serif; border: 0; border-radius: 6px;
+  padding: 6px 7px; background: #3c4366; color: #fff; cursor: pointer;
+}
+#textbook.off #tb-toggle { background: #2a2f4a; color: #9aa; padding: 3px 6px; }
+.tb-body sup { font-size: .7em; vertical-align: .8em; line-height: 0; }
+.tb-body sup .tb-frac { font-size: 1em; vertical-align: .3em; }
+.tb-body sub { font-size: .62em; vertical-align: -.4em; line-height: 0; }
+.tb-op { padding: 0 .14em; }
+.tb-fn { padding-right: .08em; }
+.tb-frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 .1em; font-size: .86em; }
+.tb-num { border-bottom: 1.5px solid currentColor; padding: 0 .15em; }
+.tb-den { padding: 0 .15em; }
+.tb-mixed { margin-right: .05em; }
+.tb-rad { display: inline-flex; align-items: flex-start; }
+.tb-rad .tb-idx { font-size: .55em; vertical-align: 0; line-height: 1; margin-right: -.35em; margin-top: -.1em; }
+.tb-sym { font-size: 1.05em; }
+.tb-rb { border-top: 1.5px solid currentColor; padding: .02em .1em 0; margin-top: .12em; display: inline-flex; align-items: center; }
+.tb-int { display: inline-flex; align-items: center; }
+.tb-intsym { font-size: 1.5em; line-height: 1; }
+.tb-lim { display: inline-flex; flex-direction: column; justify-content: space-between; font-size: .55em; height: 2.2em; margin-right: .2em; }
+.tb-note { font-size: .6em; color: #666; margin-left: .3em; }
+.tb-at { display: inline-flex; align-items: flex-end; }
+.tb-bar { display: inline-block; width: 1px; height: 1.2em; background: currentColor; margin: 0 1px; }
+.tb-caret { display: inline-block; width: 2px; height: 1em; background: #2d6cdf; margin: 0 -1px; vertical-align: middle; animation: blink 1s steps(1) infinite; }
+
+/* ---------- calculator body ---------- */
+.calc {
+  flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, #2d3352, var(--body) 30%, var(--body2));
+  border-radius: 22px 22px 30px 30px; padding: 6px 8px 8px;
+  box-shadow: inset 0 0 0 2px #3a4166, 0 6px 24px #0008;
+}
+.brand { flex: 0 0 auto; display: flex; align-items: baseline; gap: 8px; padding: 1px 8px 2px; height: clamp(16px, 3dvh, 26px); }
+.casio { font: 800 clamp(11px, 2dvh, 17px) "Arial Black", Arial, sans-serif; letter-spacing: .06em; color: #c9ccd8; }
+.model { font: italic 500 clamp(9px, 1.6dvh, 13px) Georgia, serif; color: #d3d6e0; }
+.svpam { font: 700 clamp(8px, 1.4dvh, 12px) Arial, sans-serif; color: var(--gold); letter-spacing: .05em; }
+.solar { margin-left: auto; width: 26%; height: 80%; align-self: center; background: linear-gradient(90deg, #4a2c22, #6a3d2c 50%, #4a2c22); border-radius: 3px; box-shadow: inset 0 0 0 1px #00000060; }
+
+.lcd-frame { flex: 0 0 auto; background: #15182b; border-radius: 10px; padding: 6px; box-shadow: inset 0 2px 6px #000a; }
+.lcd {
+  position: relative; background: linear-gradient(180deg, #ccd6bd, var(--lcd)); color: var(--ink);
+  border-radius: 4px; height: clamp(88px, 17dvh, 150px); padding: 2px 6px 4px;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: inset 0 1px 4px #0005;
+}
+.lcd::after { /* faint pixel grid for an LCD feel */
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18;
+  background-image: linear-gradient(transparent 0 85%, #9aa58c 85%), linear-gradient(90deg, transparent 0 85%, #9aa58c 85%);
+  background-size: 3px 3px;
+}
+.ind { display: flex; justify-content: space-between; font: 700 clamp(6.5px, 1.15dvh, 10px)/1.2 Arial, sans-serif; height: 1.35em; white-space: nowrap; }
+.ind span { opacity: 0; }
+.ind span.lit { opacity: .95; }
+.ind b { background: var(--ink); color: var(--lcd); padding: 0 1px; border-radius: 1px; font-size: .95em; }
+.top { flex: 0 0 auto; position: relative; }
+.topline, .topline2 {
+  font: 700 clamp(15px, 3.6dvh, 30px)/1.15 "DejaVu Sans Mono", "Consolas", "Courier New", monospace;
+  white-space: pre; overflow: hidden; height: 1.2em; letter-spacing: .02em; transform: scaleY(1.08);
+}
+.topline .ch { display: inline-block; width: 1ch; text-align: center; position: relative; }
+.ch.cur::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--ink); animation: blink 1s steps(1) infinite; }
+.ch.ins::after { content: ""; position: absolute; left: -1px; top: 8%; bottom: 0; width: 3px; border: 1px solid var(--ink); border-right: 0; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.lcd.menu .bot { display: none; }
+.bot { flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; gap: 2px; min-height: 0; }
+.main { display: flex; justify-content: flex-end; align-items: flex-end; height: 100%; }
+.seg { height: clamp(28px, 7.4dvh, 62px); width: auto; display: block; overflow: visible; }
+.main .seg { max-width: 100%; }
+.seg line { stroke-linecap: round; }
+.seg .on { stroke: var(--ink); fill: var(--ink); }
+.seg line.off { stroke: #00000009; }
+.seg text { font-family: "DejaVu Sans", Arial, sans-serif; font-weight: 700; }
+.expo { display: flex; align-items: flex-start; align-self: flex-start; padding-top: 2px; gap: 1px; }
+.expo .x10 { font: 700 clamp(9px, 1.7dvh, 14px) Arial, sans-serif; margin-top: .2em; }
+.expo .seg { height: clamp(16px, 3.8dvh, 34px); }
+
+/* ---------- keypad ---------- */
+.keypad {
+  flex: 1 1 auto; min-height: 0; display: grid;
+  grid-template-rows: 2.15fr 3.15fr 4.3fr; gap: 2px; padding-top: 4px;
+}
+.grid-top, .grid-mid, .grid-num { display: grid; min-height: 0; column-gap: 6px; }
+.grid-top { grid-template-columns: repeat(6, 1fr); grid-template-rows: 1fr 1fr; }
+.grid-mid { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(3, 1fr); }
+.grid-num { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(4, 1fr); column-gap: 9px; padding-top: 2px; }
+.pad { grid-column: 3 / 5; grid-row: 1 / 3; position: relative; margin: 2px 6%; }
+
+.key {
+  all: unset; box-sizing: border-box; display: flex; flex-direction: column; align-items: stretch;
+  justify-content: flex-end; min-width: 0; min-height: 0; cursor: pointer; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; position: relative;
+}
+.lg { display: flex; justify-content: space-between; align-items: flex-end; gap: 1px; font: 700 var(--lgfs)/1.1 Arial, sans-serif; white-space: nowrap; min-height: 1.2em; padding: 0 1px; }
+.lg > span { overflow: visible; }
+.ls { color: var(--gold); }
+.la { color: var(--red); }
+.lm { font-size: .92em; }
+.lb { font: 700 var(--lgfs)/1.1 Arial, sans-serif; text-align: center; min-height: 1.1em; white-space: pre; }
+.cx { color: var(--cx); }
+.sd { color: var(--sd); }
+.bs { color: var(--bs); }
+.sh { color: var(--gold); }
+.lm.sh::before { content: "["; } .lm.sh::after { content: "]"; }
+.cap {
+  flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 7px; background: linear-gradient(180deg, #34363f, var(--kdark) 55%, #0c0d12);
+  color: #fff; font: 600 clamp(11px, min(2.25dvh, 4.1vw), 19px) Arial, sans-serif;
+  box-shadow: 0 2px 0 #05060b, inset 0 1px 0 #ffffff24; transition: transform .04s;
+  max-height: 46px;
+}
+.key.small .cap { font-size: clamp(9px, min(1.8dvh, 3.2vw), 15px); letter-spacing: -.02em; }
+.key.num .cap { background: linear-gradient(180deg, #dadde3, var(--knum) 60%, #a2a6ae); color: #15171d; font-size: clamp(16px, min(3.4dvh, 6vw), 28px); border-radius: 9px; box-shadow: 0 3px 0 #5d616b, inset 0 1px 0 #fff8; max-height: 62px; }
+.key.red .cap { background: linear-gradient(180deg, #e0566c, var(--kred) 60%, #a32038); color: #fff; font-size: clamp(14px, min(2.8dvh, 5vw), 23px); border-radius: 9px; box-shadow: 0 3px 0 #6d1424, inset 0 1px 0 #fff5; max-height: 62px; }
+.key.pill .cap { background: linear-gradient(180deg, #f2f3f6, #c9ccd3); border-radius: 50px; box-shadow: 0 2px 0 #6c707b; max-height: 30px; flex: 0 1 62%; }
+.key.pill .lg { justify-content: center; gap: 5px; }
+.lp { color: #e9eaf0; }
+.lp.p-SHIFT { color: var(--gold); }
+.lp.p-ALPHA { color: var(--red); }
+.key.down .cap, .pk.down { transform: translateY(2px); filter: brightness(1.25); box-shadow: none; }
+
+body.shift .ls, body.shift .lp.p-SHIFT { text-shadow: 0 0 6px var(--gold); color: #ffd36b; }
+body.alpha .la, body.alpha .lp.p-ALPHA { text-shadow: 0 0 6px var(--red); color: #ff7d86; }
+body.shift .key[data-k="SHIFT"] .cap { background: linear-gradient(180deg, #ffe3a1, #e9a531); }
+body.alpha .key[data-k="ALPHA"] .cap { background: linear-gradient(180deg, #ffb3b9, #ef4350); }
+/* mode legends light up in their mode */
+body[data-mode="CMPLX"] .cx, body[data-mode="SD"] .sd, body[data-mode="REG"] .sd, body[data-mode="BASE"] .bs { filter: brightness(1.35) saturate(1.3); text-shadow: 0 0 5px currentColor; }
+
+/* replay / cursor pad */
+.pad {
+  border-radius: 50%; aspect-ratio: 1.25 / 1; align-self: center; justify-self: center; height: 96%; max-width: 100%;
+  background: radial-gradient(circle at 45% 35%, #f2f3f6, #b9bcc5 70%, #8e929c);
+  box-shadow: 0 3px 0 #555a66, 0 0 0 3px #1a1d30;
+}
+.pad .copy { position: absolute; top: 9%; left: 0; right: 0; text-align: center; font: 700 var(--lgfs) Arial, sans-serif; color: var(--gold); pointer-events: none; }
+.pad .replay { position: absolute; top: 44%; left: 0; right: 0; text-align: center; font: 700 calc(var(--lgfs) * .9) Arial, sans-serif; color: #8b8f99; pointer-events: none; letter-spacing: .08em; }
+.pk {
+  all: unset; position: absolute; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  color: #5c606b; font-size: clamp(9px, 1.6dvh, 14px); touch-action: manipulation;
+}
+.pk.up { top: 0; left: 25%; width: 50%; height: 38%; align-items: flex-end; padding-bottom: 2px; }
+.pk.down { bottom: 0; left: 25%; width: 50%; height: 38%; align-items: flex-start; }
+.pk.left { left: 0; top: 18%; width: 30%; height: 64%; }
+.pk.right { right: 0; top: 18%; width: 30%; height: 64%; }
+.pk.up, .pk.down { z-index: 1; }
+
+/* larger screens: centre and cap width */
+@media (min-width: 520px) {
+  #app { padding-top: 12px; padding-bottom: 12px; }
+}
+@media (min-height: 900px) {
+  #app { max-width: 520px; }
+}
+/* textbook strip: the body uses a tall line box for superscripts; nested layouts reset it */
+.tb-body .tb-frac, .tb-body .tb-rad, .tb-body .tb-int, .tb-body .tb-frac * { line-height: 1.15; }
+.tb-body sup .tb-frac { font-size: 1.1em; }

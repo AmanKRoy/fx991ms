@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#262b45">
+<meta name="description" content="CASIO fx-991MS scientific calculator emulator for exam practice. Works offline.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>fx-991MS</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="COMP">
+<main id="app">
+  <section id="textbook" aria-live="polite">
+    <div id="tb-body" class="tb-body"></div>
+    <button type="button" id="tb-toggle" title="Textbook view (reading aid, not on the real calculator)">TB</button>
+  </section>
+  <div class="calc">
+    <header class="brand">
+      <span class="casio">CASIO</span>
+      <span class="model">fx-991MS</span>
+      <span class="svpam">S-V.P.A.M.</span>
+      <span class="solar" aria-hidden="true"></span>
+    </header>
+    <div class="lcd-frame"><div id="lcd" class="lcd" role="status"></div></div>
+    <div class="keypad">
+      <div id="keys-top" class="grid-top"></div>
+      <div id="keys-mid" class="grid-mid"></div>
+      <div id="keys-num" class="grid-num"></div>
+    </div>
+  </div>
+</main>
+<noscript>This calculator needs JavaScript.</noscript>
+<script type="module" src="src/ui/main.js"></script>
+</body>
+</html>

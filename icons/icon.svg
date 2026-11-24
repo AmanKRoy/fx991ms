@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#262b45"/>
+  <rect x="64" y="56" width="384" height="150" rx="18" fill="#c3cdb4"/>
+  <text x="92" y="112" font-family="monospace" font-weight="700" font-size="46" fill="#1b221d">fx-991</text>
+  <text x="420" y="186" text-anchor="end" font-family="monospace" font-weight="700" font-size="72" fill="#1b221d">MS</text>
+  <g fill="#c3c6cd">
+    <rect x="64" y="244" width="104" height="64" rx="14"/><rect x="204" y="244" width="104" height="64" rx="14"/><rect x="344" y="244" width="104" height="64" rx="14" fill="#c9304a"/>
+    <rect x="64" y="336" width="104" height="64" rx="14"/><rect x="204" y="336" width="104" height="64" rx="14"/><rect x="344" y="336" width="104" height="64" rx="14"/>
+    <rect x="64" y="428" width="104" height="44" rx="12"/><rect x="204" y="428" width="104" height="44" rx="12"/><rect x="344" y="428" width="104" height="44" rx="12"/>
+  </g>
+</svg>
